@@ -3,7 +3,9 @@ module Views exposing (view)
 import Html exposing (Html, button, div, span, text)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
-import Model exposing (Ingredient, Instruction, Model, Recipe, RecipeIngredient)
+import Ingredient exposing (Ingredient)
+import Model exposing (Model)
+import Recipe exposing (Amount(..), Recipe, RecipeIngredient, RecipeInstruction)
 import Update exposing (Msg(..), getPossibleRecipes)
 
 
@@ -99,13 +101,13 @@ viewRecipeIngredient { amount, ingredient, isGarnish } =
 
         amountString =
             case amount of
-                Model.Cl clFloat ->
+                Cl clFloat ->
                     String.fromFloat clFloat ++ " cl "
 
-                Model.Oz ozFloat ->
+                Oz ozFloat ->
                     String.fromFloat ozFloat ++ " oz "
 
-                Model.Count count ->
+                Count count ->
                     case count of
                         0 ->
                             "Zero "
@@ -125,7 +127,7 @@ viewRecipeIngredient { amount, ingredient, isGarnish } =
                         n ->
                             String.fromInt n ++ " "
 
-                Model.NoAmount ->
+                NoAmount ->
                     " "
     in
     div
@@ -136,9 +138,9 @@ viewRecipeIngredient { amount, ingredient, isGarnish } =
         ]
 
 
-viewInstructionLine : Instruction -> Html Msg
-viewInstructionLine instruction =
-    div [] [ text instruction ]
+viewInstructionLine : RecipeInstruction -> Html Msg
+viewInstructionLine recipeInstruction =
+    div [] [ text recipeInstruction ]
 
 
 viewRecipe : Recipe -> Html Msg

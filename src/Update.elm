@@ -1,6 +1,9 @@
 module Update exposing (Msg(..), getPossibleRecipes, init, subscriptions, update)
 
-import Model exposing (Amount(..), GlassType(..), Ingredient, Model, Recipe, garnish, optionalIngredient, requiredIngredient)
+import Ingredient exposing (AlcoholContent(..), Ingredient)
+import IngredientType
+import Model exposing (Model)
+import Recipe exposing (Recipe)
 
 
 type Msg
@@ -60,51 +63,9 @@ subscriptions model =
     Sub.none
 
 
-sloeGin =
-    { name = "Sloe Gin" }
-
-
-gin =
-    { name = "Gin" }
-
-
-tonicWater =
-    { name = "Tonic Water" }
-
-
-simpleSyrup =
-    { name = "Simple Syrup" }
-
-
-tripleSec =
-    { name = "Triple Sec" }
-
-
-limeJuice =
-    { name = "Lime Juice" }
-
-
-limeWedge =
-    { name = "Lime Wedge" }
-
-
-ginTonic : Recipe
-ginTonic =
-    { name = "Gin and Tonic"
-    , ingredients =
-        [ requiredIngredient (Cl 5) gin
-        , requiredIngredient (Cl 15) tonicWater
-        , optionalIngredient (Count 1) limeJuice
-        , garnish (Count 1) limeWedge
-        ]
-    , glassType = Highball
-    , instructions = [ "Pour gin into ice-filled glass", "Add tonic water" ]
-    }
-
-
 allRecipes : List Recipe
 allRecipes =
-    [ ginTonic ]
+    [ Recipe.ginTonic ]
 
 
 canMakeRecipe : Model -> Recipe -> Bool
@@ -120,21 +81,21 @@ getPossibleRecipes model =
 
 initialHas : List Ingredient
 initialHas =
-    [ sloeGin
-    , gin
-    , tonicWater
+    [ Ingredient.plymouthSloeGin
+    , Ingredient.gin
+    , Ingredient.tonicWater
     ]
 
 
 initialCanAquire : List Ingredient
 initialCanAquire =
-    [ simpleSyrup
+    [ Ingredient.simpleSyrup
     ]
 
 
 initialIngredients : List Ingredient
 initialIngredients =
-    [ tripleSec
+    [ Ingredient.tripleSec
     ]
 
 
