@@ -1,9 +1,10 @@
-module Update exposing (Msg(..), getPossibleRecipes, init, subscriptions, update)
+module Update exposing (Msg(..), canCreateRecipeResults, getPossibleRecipes, init, subscriptions, update)
 
 import Ingredient exposing (AlcoholContent(..), Ingredient)
 import IngredientType
 import Model exposing (Model)
-import Recipe exposing (Recipe)
+import Recipe exposing (CanCreateRecipeResult, Recipe, canCreateRecipe, glassTypeToString)
+import Set
 
 
 type Msg
@@ -65,18 +66,33 @@ subscriptions model =
 
 allRecipes : List Recipe
 allRecipes =
-    [ Recipe.ginTonic ]
+    [ Recipe.ginTonic
+    , Recipe.sloeGinTonic
+    ]
 
 
-canMakeRecipe : Model -> Recipe -> Bool
-canMakeRecipe model recipe =
-    True
+canMakeRecipe : List Ingredient -> Set.Set String -> Recipe -> Bool
+canMakeRecipe ingredients availableGlassTypes recipe =
+    let
+        hasIngredients =
+            recipe |> Recipe.canBeMadeWith ingredients
+
+        hasCorrectGlasses =
+            Set.member (glassTypeToString recipe.glassType) availableGlassTypes
+    in
+    hasIngredients && hasCorrectGlasses
 
 
 getPossibleRecipes : Model -> List Recipe
 getPossibleRecipes model =
     allRecipes
-        |> List.filter (canMakeRecipe model)
+        |> List.filter (canMakeRecipe model.has Recipe.allGlassTypes)
+
+
+canCreateRecipeResults : Model -> List ( Recipe, CanCreateRecipeResult )
+canCreateRecipeResults model =
+    allRecipes
+        |> List.map (\recipe -> ( recipe, canCreateRecipe model.has recipe ))
 
 
 initialHas : List Ingredient

@@ -5,8 +5,8 @@ import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
 import Ingredient exposing (Ingredient)
 import Model exposing (Model)
-import Recipe exposing (Amount(..), Recipe, RecipeIngredient, RecipeInstruction)
-import Update exposing (Msg(..), getPossibleRecipes)
+import Recipe exposing (Amount(..), CanCreateRecipeResult(..), Recipe, RecipeIngredient, RecipeInstruction)
+import Update exposing (Msg(..), canCreateRecipeResults, getPossibleRecipes)
 
 
 heading : String -> Html Msg
@@ -165,6 +165,41 @@ possibleDrinksSection possibleRecipes =
             :: List.map viewRecipe possibleRecipes
 
 
+viewCanCreateRecipeResult : ( Recipe, CanCreateRecipeResult ) -> Html Msg
+viewCanCreateRecipeResult ( recipe, canCreateRecipeResult ) =
+    let
+        viewVerdict =
+            case canCreateRecipeResult of
+                HasAllIngredients ingredientsWeHave ->
+                    span [ style "color" "green" ] [ text "Verdict: Can make!" ]
+
+                MissingIngredients ingredientsWeHave missingIngredients ->
+                    let
+                        n : String
+                        n =
+                            String.fromInt (List.length missingIngredients)
+
+                        missingIngredientsString : String
+                        missingIngredientsString =
+                            missingIngredients
+                                |> List.map .name
+                                |> String.join ", "
+                    in
+                    div []
+                        [ div [ style "color" "red" ] [ text ("Verdict: MISSING " ++ n ++ " ingredient(s):") ]
+                        , div [ style "color" "#aa4343" ] [ text missingIngredientsString ]
+                        ]
+    in
+    div [] [ viewRecipe recipe, viewVerdict ]
+
+
+drinksOverviewSection : List ( Recipe, CanCreateRecipeResult ) -> Html Msg
+drinksOverviewSection recipeAndCanCreateRecipeResult =
+    div [] <|
+        heading "Drink overview"
+            :: List.map viewCanCreateRecipeResult recipeAndCanCreateRecipeResult
+
+
 leftSide : Model -> Html Msg
 leftSide model =
     div [ style "grid-column-start" "1" ]
@@ -177,7 +212,9 @@ leftSide model =
 middleSide : Model -> Html Msg
 middleSide model =
     div [ style "grid-column-start" "2" ]
-        [ possibleDrinksSection (getPossibleRecipes model) ]
+        [ possibleDrinksSection (getPossibleRecipes model)
+        , drinksOverviewSection (canCreateRecipeResults model)
+        ]
 
 
 rightSide : Model -> Html Msg
@@ -204,7 +241,7 @@ midSection model =
 
 footer : Html Msg
 footer =
-    div [] [ text "Made in elm" ]
+    div [] [ text "Made with elm" ]
 
 
 view : Model -> Html Msg

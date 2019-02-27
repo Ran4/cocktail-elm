@@ -1,6 +1,8 @@
-module Recipe exposing (Amount(..), Recipe, RecipeIngredient, RecipeInstruction, garnish, ginTonic, optionalIngredient, requiredIngredient)
+module Recipe exposing (Amount(..), CanCreateRecipeResult(..), Recipe, RecipeIngredient, RecipeInstruction, allGlassTypes, canBeMadeWith, canCreateRecipe, garnish, ginTonic, glassTypeToString, optionalIngredient, requiredIngredient, sloeGinTonic)
 
 import Ingredient exposing (AlcoholContent(..), Ingredient)
+import IngredientType exposing (IngredientType)
+import Set
 
 
 type Amount
@@ -30,6 +32,44 @@ type GlassType
     | Rocks
     | Tumbler
     | UnknownGlassType
+
+
+glassTypeToString : GlassType -> String
+glassTypeToString glassType =
+    case glassType of
+        Coupe ->
+            "Coupe"
+
+        Highball ->
+            "Highball"
+
+        Margarita ->
+            "Margarita"
+
+        Martini ->
+            "Martini"
+
+        Rocks ->
+            "Rocks"
+
+        Tumbler ->
+            "Tumbler"
+
+        UnknownGlassType ->
+            "UnknownGlassType"
+
+
+allGlassTypes : Set.Set String
+allGlassTypes =
+    Set.fromList
+        [ glassTypeToString Coupe
+        , glassTypeToString Highball
+        , glassTypeToString Margarita
+        , glassTypeToString Martini
+        , glassTypeToString Rocks
+        , glassTypeToString Tumbler
+        , glassTypeToString UnknownGlassType
+        ]
 
 
 type alias Recipe =
@@ -79,3 +119,81 @@ ginTonic =
     , glassType = Highball
     , instructions = [ "Pour gin into ice-filled glass", "Add tonic water" ]
     }
+
+
+sloeGinTonic : Recipe
+sloeGinTonic =
+    { name = "Sloe Gin and Tonic"
+    , ingredients =
+        [ requiredIngredient (Cl 4) Ingredient.plymouthSloeGin
+        , requiredIngredient (Cl 16) Ingredient.simpleSyrup
+        , optionalIngredient (Count 1) Ingredient.limeWedge
+        ]
+    , glassType = Highball
+    , instructions =
+        [ "Pour gin into an highball glass"
+        , "Add tonic water"
+        , "Garnish with a lime wedge"
+        ]
+    }
+
+
+{-| True iff recipe can be made using only ingredientsWeHave
+-}
+canBeMadeWith : List Ingredient -> Recipe -> Bool
+canBeMadeWith ingredientsWeHave recipe =
+    let
+        requiredIngredientTypes : List IngredientType
+        requiredIngredientTypes =
+            recipe.ingredients
+                |> List.filter (not << .optional)
+                |> List.map (.ingredient >> .ingredientType)
+
+        availableIngredientTypes : List IngredientType
+        availableIngredientTypes =
+            ingredientsWeHave
+                |> List.map .ingredientType
+    in
+    requiredIngredientTypes
+        |> List.all (\it -> List.member it availableIngredientTypes)
+
+
+type alias MatchingIngredients =
+    Ingredient
+
+
+type alias MissingIngredient =
+    Ingredient
+
+
+type CanCreateRecipeResult
+    = HasAllIngredients (List Ingredient)
+    | MissingIngredients (List MatchingIngredients) (List MissingIngredient)
+
+
+canCreateRecipe : List Ingredient -> Recipe -> CanCreateRecipeResult
+canCreateRecipe ingredientsWeHave recipe =
+    let
+        requiredIngredients : List Ingredient
+        requiredIngredients =
+            recipe.ingredients
+                |> List.filter (not << .optional)
+                |> List.map .ingredient
+
+        availableIngredientTypes : List IngredientType
+        availableIngredientTypes =
+            ingredientsWeHave
+                |> List.map .ingredientType
+
+        ( matchingIngredients, missingIngredients ) =
+            requiredIngredients
+                |> List.partition
+                    (\it ->
+                        List.member it.ingredientType availableIngredientTypes
+                    )
+    in
+    if List.length missingIngredients == 0 then
+        HasAllIngredients matchingIngredients
+
+    else
+        MissingIngredients matchingIngredients missingIngredients
