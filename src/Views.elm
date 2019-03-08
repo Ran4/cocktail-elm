@@ -178,32 +178,36 @@ possibleDrinksSection possibleRecipes =
     div [] <| [ heading "Possible drinks", recipeViews ]
 
 
+viewVerdict : CanCreateRecipeResult -> Html Msg
+viewVerdict canCreateRecipeResult =
+    case canCreateRecipeResult of
+        HasAllIngredients ingredientsWeHave ->
+            span [ style "color" "green" ] [ text "Verdict: Can make!" ]
+
+        MissingIngredients ingredientsWeHave missingIngredients ->
+            let
+                verdictText : String
+                verdictText =
+                    case List.length missingIngredients of
+                        1 ->
+                            "Missing 1 ingredient: "
+
+                        n ->
+                            "Missing " ++ String.fromInt n ++ " ingredients:"
+
+                missingIngredientsString : String
+                missingIngredientsString =
+                    String.join ", " <| List.map .name missingIngredients
+            in
+            div []
+                [ div [ style "color" "red" ] [ text verdictText ]
+                , div [ style "color" "#aa4343" ] [ text missingIngredientsString ]
+                ]
+
+
 viewCanCreateRecipeResult : ( Recipe, CanCreateRecipeResult ) -> Html Msg
 viewCanCreateRecipeResult ( recipe, canCreateRecipeResult ) =
-    let
-        viewVerdict =
-            case canCreateRecipeResult of
-                HasAllIngredients ingredientsWeHave ->
-                    span [ style "color" "green" ] [ text "Verdict: Can make!" ]
-
-                MissingIngredients ingredientsWeHave missingIngredients ->
-                    let
-                        n : String
-                        n =
-                            String.fromInt (List.length missingIngredients)
-
-                        missingIngredientsString : String
-                        missingIngredientsString =
-                            missingIngredients
-                                |> List.map .name
-                                |> String.join ", "
-                    in
-                    div []
-                        [ div [ style "color" "red" ] [ text ("Verdict: MISSING " ++ n ++ " ingredient(s):") ]
-                        , div [ style "color" "#aa4343" ] [ text missingIngredientsString ]
-                        ]
-    in
-    div drinkStyle [ viewRecipe recipe, viewVerdict ]
+    div drinkStyle [ viewRecipe recipe, viewVerdict canCreateRecipeResult ]
 
 
 drinksOverviewSection : List ( Recipe, CanCreateRecipeResult ) -> Html Msg
