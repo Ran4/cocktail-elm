@@ -143,6 +143,15 @@ viewInstructionLine recipeInstruction =
     div [] [ text recipeInstruction ]
 
 
+drinkStyle =
+    [ style "border-style" "solid"
+    , style "border-width" "2px"
+    , style "border-radius" "1em"
+    , style "border-color" "black"
+    , style "margin" "8px"
+    ]
+
+
 viewRecipe : Recipe -> Html Msg
 viewRecipe recipe =
     let
@@ -155,14 +164,18 @@ viewRecipe recipe =
         instructions =
             div [ style "color" "white" ] (List.map viewInstructionLine recipe.instructions)
     in
-    div [] [ labelAndStar, amounts, instructions ]
+    div
+        []
+        [ labelAndStar, amounts, instructions ]
 
 
 possibleDrinksSection : List Recipe -> Html Msg
 possibleDrinksSection possibleRecipes =
-    div [] <|
-        heading "Possible drinks"
-            :: List.map viewRecipe possibleRecipes
+    let
+        recipeViews =
+            div drinkStyle <| List.map viewRecipe possibleRecipes
+    in
+    div [] <| [ heading "Possible drinks", recipeViews ]
 
 
 viewCanCreateRecipeResult : ( Recipe, CanCreateRecipeResult ) -> Html Msg
@@ -190,7 +203,7 @@ viewCanCreateRecipeResult ( recipe, canCreateRecipeResult ) =
                         , div [ style "color" "#aa4343" ] [ text missingIngredientsString ]
                         ]
     in
-    div [] [ viewRecipe recipe, viewVerdict ]
+    div drinkStyle [ viewRecipe recipe, viewVerdict ]
 
 
 drinksOverviewSection : List ( Recipe, CanCreateRecipeResult ) -> Html Msg
