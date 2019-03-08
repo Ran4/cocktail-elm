@@ -2,10 +2,12 @@ module Ingredient exposing
     ( AlcoholContent(..)
     , Ingredient
     , gin
+    , lemonJuice
     , limeJuice
     , limeWedge
     , plymouthSloeGin
     , simpleSyrup
+    , sodaWater
     , tonicWater
     , tripleSec
     )
@@ -84,6 +86,11 @@ tonicWater =
     nonAlcoholicIngredient IngredientType.TonicWater "Tonic Water"
 
 
+sodaWater : Ingredient
+sodaWater =
+    nonAlcoholicIngredient IngredientType.SodaWater "Soda water"
+
+
 simpleSyrup : Ingredient
 simpleSyrup =
     nonAlcoholicIngredient IngredientType.SimpleSyrup "Simple syrup"
@@ -98,6 +105,11 @@ tripleSec =
 limeJuice : Ingredient
 limeJuice =
     nonAlcoholicIngredient IngredientType.Lime "Lime Juice"
+
+
+lemonJuice : Ingredient
+lemonJuice =
+    nonAlcoholicIngredient IngredientType.Lemon "Lemon Juice"
 
 
 limeWedge : Ingredient

@@ -68,6 +68,7 @@ allRecipes : List Recipe
 allRecipes =
     [ Recipe.ginTonic
     , Recipe.sloeGinTonic
+    , Recipe.tomCollins
     ]
 
 

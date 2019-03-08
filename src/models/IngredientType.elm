@@ -20,6 +20,7 @@ type IngredientType
     | Lemon
     | Lime
     | LimeCordial -- e.g. Rose's Lime
+    | SodaWater
     | AgaveNectar
     | Cherry
 
@@ -81,6 +82,9 @@ toString ingredientType =
         -- e.g. Rose's Lime
         LimeCordial ->
             "Lime Cordial"
+
+        SodaWater ->
+            "Soda water"
 
         AgaveNectar ->
             "Agave nectar"

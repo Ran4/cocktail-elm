@@ -1,4 +1,4 @@
-module Recipe exposing (Amount(..), CanCreateRecipeResult(..), Recipe, RecipeIngredient, RecipeInstruction, allGlassTypes, canBeMadeWith, canCreateRecipe, garnish, ginTonic, glassTypeToString, optionalIngredient, requiredIngredient, sloeGinTonic)
+module Recipe exposing (Amount(..), CanCreateRecipeResult(..), Recipe, RecipeIngredient, RecipeInstruction, allGlassTypes, canBeMadeWith, canCreateRecipe, garnish, ginTonic, glassTypeToString, optionalIngredient, requiredIngredient, sloeGinTonic, tomCollins)
 
 import Ingredient exposing (AlcoholContent(..), Ingredient)
 import IngredientType exposing (IngredientType)
@@ -134,6 +134,23 @@ sloeGinTonic =
         [ "Pour gin into an highball glass"
         , "Add tonic water"
         , "Garnish with a lime wedge"
+        ]
+    }
+
+
+tomCollins : Recipe
+tomCollins =
+    { name = "Tom Collins"
+    , ingredients =
+        [ requiredIngredient (Cl 4.5) Ingredient.gin
+        , requiredIngredient (Cl 3) Ingredient.lemonJuice
+        , requiredIngredient (Cl 1.5) Ingredient.simpleSyrup
+        , optionalIngredient (Cl 6) Ingredient.sodaWater
+        ]
+    , glassType = Highball
+    , instructions =
+        [ "Mix the gin, lemon juice and sugar syrup in a tall glass with ice"
+        , "Top up with soda water"
         ]
     }
 
