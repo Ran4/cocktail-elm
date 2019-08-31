@@ -10,6 +10,7 @@ type IngredientType
     | Vodka
     | DarkRum
     | LightRum
+    | ElderflowerLiqueur
     | MaraschinoLiqueur
     | CremeDeViolette
     | OrangeSlice
@@ -51,6 +52,9 @@ toString ingredientType =
 
         LightRum ->
             "Light Rum"
+
+        ElderflowerLiqueur ->
+            "Elderflower Liqueur"
 
         MaraschinoLiqueur ->
             "Maraschino Liqueur"

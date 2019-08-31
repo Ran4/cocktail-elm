@@ -1,4 +1,4 @@
-module Recipe exposing (Amount(..), CanCreateRecipeResult(..), Recipe, RecipeIngredient, RecipeInstruction, allGlassTypes, canBeMadeWith, canCreateRecipe, garnish, ginTonic, glassTypeToString, optionalIngredient, requiredIngredient, sloeGinTonic, tomCollins)
+module Recipe exposing (Amount(..), CanCreateRecipeResult(..), Recipe, RecipeIngredient, RecipeInstruction, allGlassTypes, canBeMadeWith, canCreateRecipe, garnish, ginTonic, glassTypeToString, optionalIngredient, requiredIngredient, sloeGinTonic, tomCollins, french77)
 
 import Ingredient exposing (AlcoholContent(..), Ingredient)
 import IngredientType exposing (IngredientType)
@@ -29,6 +29,7 @@ type GlassType
     | Highball
     | Margarita
     | Martini
+    | Flute
     | Rocks
     | Tumbler
     | UnknownGlassType
@@ -48,6 +49,9 @@ glassTypeToString glassType =
 
         Martini ->
             "Martini"
+
+        Flute ->
+            "Flute"
 
         Rocks ->
             "Rocks"
@@ -154,6 +158,20 @@ tomCollins =
         ]
     }
 
+
+french77 : Recipe
+french77 =
+    { name = "French 77"
+    , ingredients =
+        [ requiredIngredient (Cl 3) Ingredient.stGermain
+        , requiredIngredient (Cl 3) Ingredient.lemonJuice
+        ]
+    , glassType = Flute
+    , instructions =
+        [ "Pour elderflower liqueur (St Germain) and lemon juice into a chilled champagne flute"
+        , "Top with champagne. Garnich with a lemon twist"
+        ]
+    }
 
 {-| True iff recipe can be made using only ingredientsWeHave
 -}

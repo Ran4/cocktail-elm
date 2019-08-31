@@ -10,6 +10,7 @@ module Ingredient exposing
     , sodaWater
     , tonicWater
     , tripleSec
+    , stGermain
     )
 
 import IngredientType exposing (IngredientType)
@@ -79,6 +80,15 @@ gin : Ingredient
 gin =
     alcoholicDrinkIngredient IngredientType.Gin "Gin"
         |> withABV 40
+
+stGermain : Ingredient
+stGermain =
+    { name = "Elderflower Liqueur"
+    , ingredientType = IngredientType.ElderflowerLiqueur
+    , brand = Just "St Germain"
+    , alcoholContent = ABV 40
+    , description = Nothing
+    }
 
 
 tonicWater : Ingredient

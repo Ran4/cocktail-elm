@@ -69,6 +69,7 @@ allRecipes =
     [ Recipe.ginTonic
     , Recipe.sloeGinTonic
     , Recipe.tomCollins
+    , Recipe.french77
     ]
 
 
@@ -101,6 +102,8 @@ initialHas =
     [ Ingredient.plymouthSloeGin
     , Ingredient.gin
     , Ingredient.tonicWater
+    , Ingredient.stGermain
+    , Ingredient.lemonJuice
     ]
 
 
