@@ -15,9 +15,7 @@ heading label =
         [ style "color" "#a2a2a2"
         , style "font-size" "20px"
         , style "font-weight" "bold"
-        , style "border-style" "solid"
-        , style "border-width" "2px"
-        , style "border-color" "black"
+        , style "padding" "10px"
         ]
         [ text label ]
 
@@ -34,37 +32,45 @@ customButton bgColor label onclick =
     span (onClick onclick :: buttonStyle bgColor) [ text label ]
 
 
+lineStyle =
+    [ style "color" "#f0f0f0"
+    , style "padding" "6px"
+    ]
+
+
+removeButton =
+    customButton "#9f0000" "Remove"
+
+
+addButton =
+    customButton "green" "Add"
+
+
 hasIngredientLine : Ingredient -> Html Msg
 hasIngredientLine ingredient =
     div
-        [ style "color" "#f0f0f0"
-        , style "padding" "2px"
-        ]
-        [ text ingredient.name
-        , customButton "red" "Remove" (RemoveIngredientFromHas ingredient)
+        lineStyle
+        [ removeButton (RemoveIngredientFromHas ingredient)
+        , text ingredient.name
         ]
 
 
 canAquireLine : Ingredient -> Html Msg
 canAquireLine ingredient =
     div
-        [ style "color" "#f0f0f0"
-        , style "padding" "2px"
-        ]
-        [ text ingredient.name
-        , customButton "red" "Remove" (RemoveIngredientFromCanAquire ingredient)
+        lineStyle
+        [ removeButton (RemoveIngredientFromCanAquire ingredient)
         , customButton "green" "Add" (AddIngredientFromCanAquire ingredient)
+        , text ingredient.name
         ]
 
 
 ingredientsLine : Ingredient -> Html Msg
 ingredientsLine ingredient =
     div
-        [ style "color" "#f0f0f0"
-        , style "padding" "2px"
-        ]
-        [ text ingredient.name
-        , customButton "green" "Add" (AddIngredientFromIngredients ingredient)
+        lineStyle
+        [ addButton (AddIngredientFromIngredients ingredient)
+        , text ingredient.name
         ]
 
 
@@ -94,7 +100,7 @@ viewRecipeIngredient { amount, ingredient, isGarnish } =
     let
         garnishSpan =
             if isGarnish then
-                span [ style "color" "#bfffbf" ] [ text "Garnish: " ]
+                span [ style "color" "#cfff8f" ] [ text "Garnish: " ]
 
             else
                 text ""
@@ -143,15 +149,6 @@ viewInstructionLine recipeInstruction =
     div [] [ text recipeInstruction ]
 
 
-drinkStyle =
-    [ style "border-style" "solid"
-    , style "border-width" "2px"
-    , style "border-radius" "1em"
-    , style "border-color" "black"
-    , style "margin" "8px"
-    ]
-
-
 viewRecipe : Recipe -> Html Msg
 viewRecipe recipe =
     let
@@ -167,6 +164,14 @@ viewRecipe recipe =
     div
         []
         [ labelAndStar, amounts, instructions ]
+
+
+drinkStyle =
+    [ style "border-width" "2px"
+    , style "border-radius" "1em"
+    , style "border-color" "black"
+    , style "margin" "8px"
+    ]
 
 
 possibleDrinksSection : List Recipe -> Html Msg
